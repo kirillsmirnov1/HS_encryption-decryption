@@ -1,23 +1,41 @@
 package encryptdecrypt;
 
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
-        String input = "we found a treasure!";
+        Scanner scanner = new Scanner(System.in);
+        String operation = scanner.nextLine();
+        String input = scanner.nextLine();
+        int key = scanner.nextInt();
 
-        for(Character ch : input.toCharArray()){
-            System.out.print(convert(ch));
+        String result;
+
+        switch (operation){
+            case "enc":
+                result = encrypt(input, key);
+                break;
+            case "dec":
+                result = encrypt(input, -key);
+                break;
+            default:
+                result = "Wrong key";
         }
-
-        System.out.println();
+        System.out.println(result);
     }
 
-    static char convert(char input){
-        if(input >= 'a' && input <= 'z'){
-            int output = input - 'a';
-            output = output + (int)((12.5d - output) * 2d);
-            return (char)(output + 'a');
-        } else {
-            return input;
+    private static String encrypt(String input, int key) {
+        char[] inputAsCharArray = input.toCharArray();
+
+        for(int i = 0; i < inputAsCharArray.length; ++i){
+            inputAsCharArray[i] = convert(inputAsCharArray[i], key);
         }
+
+        return new String(inputAsCharArray);
+    }
+
+
+    static char convert(char input, int key){
+        return (char)(input + key);
     }
 }
