@@ -3,25 +3,45 @@ package encryptdecrypt;
 import java.util.Scanner;
 
 public class Main {
+
+    private static String mode;
+    private static String data;
+    private static int key;
+
+    private static String result;
+
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        String operation = scanner.nextLine();
-        String input = scanner.nextLine();
-        int key = scanner.nextInt();
 
-        String result;
+        parseArgs(args);
+        checkArgs();
+        calculateResult();
 
-        switch (operation){
+        System.out.println(result);
+    }
+
+    private static void calculateResult() {
+        switch (mode){
             case "enc":
-                result = encrypt(input, key);
+                result = encrypt(data, key);
                 break;
             case "dec":
-                result = encrypt(input, -key);
+                result = encrypt(data, -key);
                 break;
             default:
                 result = "Wrong key";
         }
-        System.out.println(result);
+    }
+
+    private static void checkArgs() {
+        if(mode.isBlank()){
+            mode = "enc";
+        }
+
+        if(data.isBlank()){
+            Scanner scanner = new Scanner(System.in);
+            data = scanner.nextLine();
+            key = scanner.nextInt();
+        }
     }
 
     private static String encrypt(String input, int key) {
@@ -34,6 +54,21 @@ public class Main {
         return new String(inputAsCharArray);
     }
 
+    private static void parseArgs(String[] args){
+        for(int i = 0; i < args.length; i += 2){
+            switch (args[i]){
+                case "-mode":
+                    mode = args[i+1];
+                    break;
+                case "-key":
+                    key = Integer.parseInt(args[i+1]);
+                    break;
+                case "-data":
+                    data = args[i+1];
+                    break;
+            }
+        }
+    }
 
     static char convert(char input, int key){
         return (char)(input + key);
